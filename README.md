@@ -51,13 +51,15 @@ As root user, execute
 
 By default, the only TCP ports which are exposed are `HTTP` / `HTTPS` / `SSH`. Modify the `TCP_PORTS` variable if you wish to add more.
 
+Update this script as it fits your needs. For example, this script includes an optional Gitlab Runner install. Feel free to remove it if you have no use for it.
+
 ## Built With
 
 - [Bash](https://www.gnu.org/software/bash/) - Unix shell and command language
 
 ## Authors
 
-- **Nikita Buyevich** - [nikitabuyevich.com](http://nikitabuyevich.com/)
+- **Nikita Buyevich** - [nikitabuyevich.com](https://nikitabuyevich.com/)
 
 ## License
 

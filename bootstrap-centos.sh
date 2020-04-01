@@ -49,6 +49,28 @@ esac
 
 
 
+case "$INSTALL_GITLAB_RUNNER" in
+      y|Y ) echo "Installing Gitlab Runner...";
+            # Install Gitlab Runner
+            curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash
+            yum install -y gitlab-runner
+            # Let gitlab-runner run Docker
+            usermod -aG docker gitlab-runner
+            break;;
+esac
+
+
+
+case "$REGISTER_GITLAB_RUNNER" in
+      y|Y ) echo "Registering Gitlab Runner...";
+            # Register Gitlab Runner
+            # See # See https://docs.gitlab.com/runner/register/index.html
+            gitlab-runner register
+            break;;
+esac
+
+
+
 echo "--- Enable 2FA ---"
 echo "---------------------"
 # Install 2FA
@@ -81,6 +103,8 @@ session    include      postlogin
 -session   optional     pam_reauthorize.so prepare
 auth required pam_google_authenticator.so
 EOM
+echo "----------------------------------------------------"
+echo "----------------------------------------------------"
 
 
 
@@ -152,35 +176,15 @@ git lfs install
 case "$INSTALL_DOCKER" in
       y|Y ) echo "Installing Docker...";
             # Install Docker
-            yum install -y yum-utils device-mapper-persistent-data lvm2
-            yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-            yum install docker-ce docker-ce-cli containerd.io -y
+            curl -fsSL https://get.docker.com/ | sh
             # Run Docker
             systemctl enable docker
             systemctl start docker
+            # Let admin run Docker
+            usermod -aG docker admin
             # Install docker-compose
             curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
-            break;;
-esac
-
-
-
-case "$INSTALL_GITLAB_RUNNER" in
-      y|Y ) echo "Installing Gitlab Runner...";
-            # Install Gitlab Runner
-            curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash
-            yum install -y gitlab-runner
-            break;;
-esac
-
-
-
-case "$REGISTER_GITLAB_RUNNER" in
-      y|Y ) echo "Registering Gitlab Runner...";
-            # Register Gitlab Runner
-            # See # See https://docs.gitlab.com/runner/register/index.html
-            gitlab-runner register
             break;;
 esac
 
