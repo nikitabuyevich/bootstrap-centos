@@ -526,6 +526,8 @@ set nowrap
 set laststatus=2
 set cmdheight=2
 EOM
+# Copy vim settings to root as well
+cp  /home/admin/.vimrc /root/.vimrc
 
 
 
@@ -533,6 +535,9 @@ echo "--- Install htop ---"
 echo "--------------------"
 # Installing latest vim
 yum -y install htop
+# Create necessary htop folders for admin user
+mkdir /home/admin/.config
+mkdir /home/admin/.config/htop
 # Overwrite htoprc file for admin user
 # Custom options:
 #     Use Tree View
