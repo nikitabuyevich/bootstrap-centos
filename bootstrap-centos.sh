@@ -51,6 +51,8 @@ case "$INSTALL_GITLAB_RUNNER" in
       y|Y ) read -p "Register Gitlab Runner [y/n]: " REGISTER_GITLAB_RUNNER;;
 esac
 
+# Install EPEL repo
+yum install -y epel-release
 
 
 case "$INSTALL_GITLAB_RUNNER" in
@@ -125,7 +127,7 @@ done
 echo "--- Installing Useful Packages ---"
 echo "----------------------------------"
 # Installing useful packages
-yum install -y epel-release wget unzip
+yum install -y wget unzip
 
 
 
