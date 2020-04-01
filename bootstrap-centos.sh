@@ -13,8 +13,10 @@ cd /root
 TCP_PORTS=( 80 443 )
 
 # --- ENVIRONMENT VARIABLES ---
+/bin/cat << EOM > /etc/environment
 # Enable keystrokes for non-linux machines
-export TERM=xterm-256color
+export TERM="xterm-256color"
+EOM
 
 
 
