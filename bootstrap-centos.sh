@@ -1,6 +1,5 @@
 #!/bin/bash
 # Created by Nikita Buyevich
-# Last updated on March 31st, 2020
 # Forked from https://www.limestonenetworks.com/support/knowledge-center/11/83/hardening_centos.html
 
 echo "-------------- Bootstrapping your CentOS --------------"
@@ -237,42 +236,25 @@ awk -F: '{print $1}' /etc/passwd | grep -v root > /etc/at.deny
 
 
 
-echo "--- Install and Clear IPTables Firewall  ---"
-echo "--------------------------------------------"
-yum install -y iptables
-chkconfig iptables on
-/sbin/service iptables start
-/sbin/iptables -F
-/sbin/iptables -X
-iptables-save
+echo "--- Install and Enable Firewalld---"
+echo "------------------------"
+yum install -y firewalld
+systemctl enable firewalld
+systemctl start firewalld
 
 
 echo "--- Running Firewall Configurations ---"
 echo "---------------------------------------"
 
-# By default reject all traffic
-/sbin/iptables -P INPUT DROP
-/sbin/iptables -P OUTPUT DROP
-/sbin/iptables -P FORWARD DROP
-
-# Allow localhost
-/sbin/iptables -A INPUT -i lo -j ACCEPT
-/sbin/iptables -A OUTPUT -o lo -j ACCEPT
-
-# Allow output for new, related and established connections
-/sbin/iptables -A OUTPUT -m state --state NEW,RELATED,ESTABLISHED -j ACCEPT
-
 # Open TCP Ports
 for port in ${TCP_PORTS[@]}
     do
-        echo "Opening TCP Port $port"
-        /sbin/iptables -A INPUT -p tcp -m tcp --dport $port -j ACCEPT
+      echo "Opening TCP Port $port"
+      firewall-cmd --permanent --add-port=$port/tcp
     done
 
-# Enable ntp
-iptables -A OUTPUT -p udp --dport 123 -j ACCEPT
-iptables -A INPUT -p udp --sport 123 -j ACCEPT
-
+# Apply changes
+sudo firewall-cmd --reload
 
 echo "--- Blocking Common Attacks ---"
 echo "-------------------------------"
@@ -569,6 +551,11 @@ left_meter_modes=1 1 1
 right_meters=RightCPUs Tasks LoadAverage Uptime
 right_meter_modes=1 2 2 2
 EOM
+# Create necessary htop folders for admin user
+mkdir /root/.config
+mkdir /root/.config/htop
+# Copy htop settings to root as well
+cp  /home/admin/.config/htop/htoprc /root/.config/htop/htoprc
 
 
 
