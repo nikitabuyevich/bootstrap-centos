@@ -7,18 +7,6 @@ echo "It is recommended that you only run this on a new system."
 echo "---------------------------------------------------------"
 cd /root
 
-# --- GLOBAL VARIABLES ---
-# Open HTTP / HTTPS
-TCP_PORTS=( 80 443 )
-GO_VERSION="1.14.1"
-
-# --- ENVIRONMENT VARIABLES ---
-/bin/cat << EOM > /etc/environment
-# Enable keystrokes for non-linux machines
-export TERM="xterm-256color"
-EOM
-
-
 
 echo "--- Create Admin User ---"
 echo "-------------------------"
@@ -26,6 +14,19 @@ useradd -m admin
 passwd admin
 # Give admin sudo access
 gpasswd -a admin wheel
+
+
+
+# --- GLOBAL VARIABLES ---
+# Open HTTP / HTTPS
+TCP_PORTS=( 80 443 )
+GO_VERSION="1.14.1"
+
+# --- ENVIRONMENT VARIABLES ---
+/bin/cat << EOM >> /home/admin/.bash_profile
+# Enable keystrokes for non-linux machines
+export TERM="xterm-256color"
+EOM
 
 
 
@@ -206,8 +207,14 @@ case "$INSTALL_GO" in
             sudo tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
             # Delete Go installer
             rm -rf go$GO_VERSION.linux-amd64.tar.gz
-            # Add Go to PATH
-            export PATH=$PATH:/usr/local/go/bin
+# Add Go to PATH
+# Must be placed in this akward format
+/bin/cat << EOM >> /home/admin/.bash_profile
+# Set Go PATH if it's not set
+if [[ \${PATH} != *"/usr/local/go/bin"* ]];then
+      export PATH=\$PATH:/usr/local/go/bin
+fi
+EOM
             break;;
 esac
 
