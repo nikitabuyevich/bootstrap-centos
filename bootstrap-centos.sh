@@ -171,7 +171,7 @@ systemctl start ntpd
 echo "--- Install git and git lfs ---"
 echo "-------------------------------"
 # Remove old git packages
-yum remove -y git*
+yum remove -y git
 # Install git
 yum install -y  https://centos7.iuscommunity.org/ius-release.rpm
 yum install -y  git2u-all
@@ -211,9 +211,7 @@ case "$INSTALL_GO" in
 # Must be placed in this akward format
 /bin/cat << EOM >> /home/admin/.bash_profile
 # Set Go PATH if it's not set
-if [[ \${PATH} != *"/usr/local/go/bin"* ]];then
-      export PATH=\$PATH:/usr/local/go/bin
-fi
+export PATH=\$PATH:/usr/local/go/bin
 EOM
             break;;
 esac
