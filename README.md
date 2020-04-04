@@ -28,6 +28,7 @@ The motivation for this script is to easily serve up web servers / microservices
   - Discourage Port Scanning
 - Connection tracking
 - Install Docker (optional)
+- Install Go (optional)
 - Install Gitlab Runner (optional)
 - Register Gitlab Runner (optional)
 - Install DDoS Defalate - https://github.com/jgmdev/ddos-deflate

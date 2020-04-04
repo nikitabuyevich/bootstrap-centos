@@ -10,6 +10,7 @@ cd /root
 # --- GLOBAL VARIABLES ---
 # Open HTTP / HTTPS
 TCP_PORTS=( 80 443 )
+GO_VERSION="1.14.1"
 
 # --- ENVIRONMENT VARIABLES ---
 /bin/cat << EOM > /etc/environment
@@ -47,6 +48,7 @@ echo "--------------------------------------------------------------------------
 read -p "Enter a swap file size (e.g., 4G): " SWAP_FILE_SIZE
 read -p "Enter a time zone (e.g., Europe/Berlin): " TIME_ZONE
 read -p "Install Docker [y/n]: " INSTALL_DOCKER
+read -p "Install Go (golang) [y/n]: " INSTALL_GO
 read -p "Install Gitlab Runner [y/n]: " INSTALL_GITLAB_RUNNER
 case "$INSTALL_GITLAB_RUNNER" in
       y|Y ) read -p "Register Gitlab Runner [y/n]: " REGISTER_GITLAB_RUNNER;;
@@ -191,6 +193,21 @@ case "$INSTALL_DOCKER" in
             # Install docker-compose
             curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
+            break;;
+esac
+
+
+
+case "$INSTALL_GO" in
+      y|Y ) echo "Installing Go...";
+            # Download Go
+            wget https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz
+            # Install Go
+            sudo tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
+            # Delete Go installer
+            rm -rf go$GO_VERSION.linux-amd64.tar.gz
+            # Add Go to PATH
+            export PATH=$PATH:/usr/local/go/bin
             break;;
 esac
 
