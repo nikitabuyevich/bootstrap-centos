@@ -186,6 +186,21 @@ case "$INSTALL_DOCKER" in
       y|Y ) echo "Installing Docker...";
             # Install Docker
             curl -fsSL https://get.docker.com/ | sh
+
+            # Create daemon.json file
+            # Limit total number of files Docker will store for each container
+            # e.g., max-size: "10m" means it will stop at 10MB
+            # max-file: "3" means it will only store up to 3 log files
+            /bin/cat << EOM >> /etc/docker/daemon.json
+            {
+                  "log-driver": "json-file",
+                  "log-opts": {
+                  "max-size": "10m",
+                  "max-file": "5"
+                  }
+            }
+EOM
+
             # Run Docker
             systemctl enable docker
             systemctl start docker
@@ -194,6 +209,7 @@ case "$INSTALL_DOCKER" in
             # Install docker-compose
             curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
+
             break;;
 esac
 
