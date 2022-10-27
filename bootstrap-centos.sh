@@ -153,7 +153,7 @@ echo "-------------------------------"
 yum remove -y git
 # Install git
 yum install -y https://repo.ius.io/ius-release-el7.rpm https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-yum install -y git
+yum install -y git236
 # Install git lfs
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash
 yum install -y git-lfs
