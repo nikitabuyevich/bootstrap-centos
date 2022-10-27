@@ -110,7 +110,13 @@ done
 echo "--- Installing Useful Packages ---"
 echo "----------------------------------"
 # Installing useful packages
-yum install -y wget unzip
+yum install -y wget unzip make
+
+
+
+echo "--- Installing GCC/G++ ---"
+echo "----------------------------------"
+sudo dnf groupinstall -y "Development Tools"
 
 
 
