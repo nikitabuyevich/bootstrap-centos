@@ -20,7 +20,7 @@ gpasswd -a admin wheel
 # --- GLOBAL VARIABLES ---
 # Open HTTP / HTTPS
 TCP_PORTS=( 80 443 )
-GO_VERSION="1.14.1"
+GO_VERSION="1.19.2"
 
 # --- ENVIRONMENT VARIABLES ---
 /bin/cat << EOM >> /home/admin/.bash_profile
@@ -57,27 +57,6 @@ esac
 
 # Install EPEL repo
 yum install -y epel-release
-
-
-case "$INSTALL_GITLAB_RUNNER" in
-      y|Y ) echo "Installing Gitlab Runner...";
-            # Install Gitlab Runner
-            curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash
-            yum install -y gitlab-runner
-            # Let gitlab-runner run Docker
-            usermod -aG docker gitlab-runner
-            break;;
-esac
-
-
-
-case "$REGISTER_GITLAB_RUNNER" in
-      y|Y ) echo "Registering Gitlab Runner...";
-            # Register Gitlab Runner
-            # See # See https://docs.gitlab.com/runner/register/index.html
-            gitlab-runner register
-            break;;
-esac
 
 
 
@@ -173,12 +152,34 @@ echo "-------------------------------"
 # Remove old git packages
 yum remove -y git
 # Install git
-yum install -y  https://centos7.iuscommunity.org/ius-release.rpm
-yum install -y  git2u-all
+yum install -y https://repo.ius.io/ius-release-el7.rpm https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install -y git
 # Install git lfs
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash
 yum install -y git-lfs
 git lfs install
+
+
+
+case "$INSTALL_GITLAB_RUNNER" in
+      y|Y ) echo "Installing Gitlab Runner...";
+            # Install Gitlab Runner
+            curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | bash
+            yum install -y gitlab-runner
+            # Let gitlab-runner run Docker
+            usermod -aG docker gitlab-runner
+            break;;
+esac
+
+
+
+case "$REGISTER_GITLAB_RUNNER" in
+      y|Y ) echo "Registering Gitlab Runner...";
+            # Register Gitlab Runner
+            # See # See https://docs.gitlab.com/runner/register/index.html
+            gitlab-runner register
+            break;;
+esac
 
 
 
